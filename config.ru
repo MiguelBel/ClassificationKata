@@ -1,19 +1,18 @@
 require 'rack'
-require 'json'
+require './response'
 
-STATUS_CODE = 200
-HEADERS = {
-  'Content-Type'=>'application/json',
-  'Access-Control-Allow-Origin' => '*'
-}
-BODY = {
-  classification: [
-    { name: 'Madrid', points: 5 },
-    { name: 'Valencia', points: 10 },
-    { name: 'Barcelona', points: 7 },
-    { name: 'Zaragoza', points: 8 },
-    { name: 'Bilbao', points: 9 }
-  ]
-}.to_json
+app = Rack::Builder.new do
+  map '/' do
+    run Response::Normal
+  end
 
-run lambda { |env| [STATUS_CODE, HEADERS, [BODY]] }
+  map '/timeout' do
+    run Response::Timeout
+  end
+
+  map '/failure' do
+    run Response::Failure
+  end
+end
+
+run app
