@@ -1,19 +1,18 @@
 require 'rack'
-require 'json'
-require 'stringio'
+require './response'
 
-response_code = 200
-headers = {
-  'Content-Type'=>'application/json',
-  'Access-Control-Allow-Origin' => '*'
-}
-classification = { classification: [
-    { name: "Madrid", points: 5 },
-    { name: "Valencia", points: 10 },
-    { name: "Barcelona", points: 7 },
-    { name: "Zaragoza", points: 8 },
-    { name: "Bilbao", points: 9 }
-  ]
-}
+app = Rack::Builder.new do
+  map '/' do
+    run Response::Normal
+  end
 
-run lambda { |env| [response_code, headers, StringIO.new(classification.to_json)] }
+  map '/timeout' do
+    run Response::Timeout
+  end
+
+  map '/failure' do
+    run Response::Failure
+  end
+end
+
+run app
