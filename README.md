@@ -43,5 +43,7 @@ indice | ciudad | puntos
 ### Endpoints
 
 `/` -> el servicio responde correctamente
+
 `/timeout` -> el servicio responde con un tiempo de respuesta variable
+
 `/failure` -> el servicio responde una de cada tres peticiones con error
